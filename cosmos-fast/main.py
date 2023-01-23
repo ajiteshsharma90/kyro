@@ -6,8 +6,8 @@ from routes import router as todo_router
 
 config = dotenv_values(".env")
 app = FastAPI()
-DATABASE_NAME = "todo-db"
-CONTAINER_NAME = "todo-items"
+DATABASE_NAME = "kyro-cosmos-db"
+CONTAINER_NAME = "mycontainer"
 
 app.include_router(todo_router, tags=["todos"], prefix="/todos")
 
