@@ -26,12 +26,17 @@ jobs:
         python -m pip install --upgrade azure-cli  
         
     
-    - name: Login to Azure using Service Principal
-      run: |
-        az login --service-principal -u be1c3233-9f4c-4951-9513-2f51db2835b2 -p L2K8Q~bT-PunqB84AoV61lRv64bTP5RPLT8BRbrL --tenant 9fa97d99-5744-4766-89bc-f560b9a21102
-           
-            
-    - name: Push image to ACR
-      run: |
-        az acr build --registry kyroreg --image myimage
+    - name: Log in to container registry
+      uses: docker/login-action@v1
+      with:
+          registry: kyroreg.azurecr.io
+          username: kyroreg
+          password: 8QlSiawD+pc88sEPD1+s8r+qeXt6h7jUf9fT6tcYty+ACRA9sjnN
 
+    - name: Build and push container image to registry
+      uses: docker/build-push-action@v2
+      with:
+          push: true
+          tags:  kyroreg.azurecr.io/kyro-container-app:${{ github.sha }}
+          file: ./cosmos-fast/Dockerfile
+          context: ./
