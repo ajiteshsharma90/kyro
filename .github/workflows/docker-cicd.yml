@@ -1,0 +1,28 @@
+name: CI/CD pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Build Docker image
+      run: |
+        docker build -t myimage -f /cosmos-fast/Dockerfile
+    
+    
+    - name: Login to Azure
+      run: az login --service-principal -u be1c3233-9f4c-4951-9513-2f51db2835b2 -p L2K8Q~bT-PunqB84AoV61lRv64bTP5RPLT8BRbrL --tenant 9fa97d99-5744-4766-89bc-f560b9a21102
+
+            
+    - name: Push image to ACR
+      run: |
+        az acr build --registry kyroreg --image myimage
+
