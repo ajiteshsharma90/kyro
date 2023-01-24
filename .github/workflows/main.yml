@@ -43,14 +43,17 @@ jobs:
     steps:
       - name: Azure Login
         uses: azure/login@v1
-        with:
-          creds: ${{ secrets.KYROAPP_AZURE_CREDENTIALS }}
+   
 
 
-      - name: Deploy to containerapp
-        uses: azure/CLI@v1
-        with:
-          inlineScript: |
-            az config set extension.use_dynamic_install=yes_without_prompt
-            az containerapp registry set -n kyro-app -g kyro-RGP --server kryoreg.azurecr.io --username  ${{ secrets.KYROAPP_REGISTRY_USERNAME }} --password ${{ secrets.KYROAPP_REGISTRY_PASSWORD }}
-            az containerapp update -n kyro-app -g kyro-RGP --image kryoreg.azurecr.io/kyro-app:${{ github.sha }}
+      - name: Login to ACR
+        run: az acr login --name kryoreg
+
+      - name: Push image to ACR
+        run: docker push kryoreg.azurecr.io/myimage:${{ env.GITHUB_SHA }}
+  
+env:
+  AZURE_SP_ID: ${{ secrets.AZURE_SP_ID }}
+  AZURE_SP_PASSWORD: ${{ secrets.AZURE_SP_PASSWORD }}
+  AZURE_SP_TENANT: ${{ secrets.AZURE_SP_TENANT }}
+  AZURE_SUBSCRIPTION: ${{ secrets.AZURE_SUBSCRIPTION }}
