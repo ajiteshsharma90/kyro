@@ -40,9 +40,4 @@ jobs:
           tags:  kyroreg.azurecr.io/kyro-container-app:${{ github.sha }}
           file: ./cosmos-fast/Dockerfile
           context: ./
-          
-  deploy:
-      runs-on: ubuntu-latest
-      needs: build
-      
-   
+        
