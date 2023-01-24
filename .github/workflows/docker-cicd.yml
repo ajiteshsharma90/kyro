@@ -24,10 +24,14 @@ jobs:
     - name: Install Azure CLI
       run: |
         python -m pip install --upgrade azure-cli  
+        
+    - name: Set the subscription
+      run: |
+        az account set --subscription 2395f95a-e20b-4aba-bc22-7388b338a81e
 
     - name: Login to Azure
-      run: az account set --subscription 2395f95a-e20b-4aba-bc22-7388b338a81e
-           az login --service-principal -u be1c3233-9f4c-4951-9513-2f51db2835b2 -p L2K8Q~bT-PunqB84AoV61lRv64bTP5RPLT8BRbrL --tenant 9fa97d99-5744-4766-89bc-f560b9a21102
+      run: |
+        az login --service-principal -u be1c3233-9f4c-4951-9513-2f51db2835b2 -p L2K8Q~bT-PunqB84AoV61lRv64bTP5RPLT8BRbrL --tenant 9fa97d99-5744-4766-89bc-f560b9a21102
            
             
     - name: Push image to ACR
