@@ -18,8 +18,8 @@ jobs:
       with:
         context: .
         push: true
-        tags: myimage
-        Dockerfile: kyro/cosmos-fast/Dockerfile
+        tags: myorg/myimage
+        Dockerfile: cosmos-fast/Dockerfile
 
     
     
