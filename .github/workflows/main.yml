@@ -45,10 +45,6 @@ jobs:
         uses: azure/login@v1
         with:
           creds: ${{ secrets.KYROAPP_AZURE_CREDENTIALS }}
-        
-      - name: Push image to ACR
-        run: |
-         az acr build --registry kryoreg --image myimage .
 
 
       - name: Deploy to containerapp
