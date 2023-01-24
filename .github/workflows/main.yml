@@ -38,8 +38,8 @@ jobs:
 
 
     - name: Login to Azure
-      run: az login --service-principal -u 87918873-4a8b-42a8-94df-89cd0e0cd733 -p 78888f13-bda2-48ae-9ab4-d00460935c7d --tenant 9fa97d99-5744-4766-89bc-f560b9a21102
-
+      run: az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET --tenant $AZURE_TENANT_ID
+   
     - name: Push image to ACR
       run: |
         az acr build --registry kryoreg --image myimage .
