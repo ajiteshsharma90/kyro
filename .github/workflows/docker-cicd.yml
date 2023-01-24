@@ -14,7 +14,8 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Build Docker image
-      run: docker build -t myimage -f /cosmos-fast/ 
+      run: docker build -f https://github.com/ajiteshsharma90/kyro/blob/main/cosmos-fast/Dockerfile .
+
 
     
     
