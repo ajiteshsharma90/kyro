@@ -34,7 +34,8 @@ jobs:
 
     - name: Build Docker image
       run: |
-        docker build -t myimage . ./cosmos-fast
+        docker build -t my-image -f cosmos-fast/Dockerfile .
+
 
     - name: Login to Azure
       run: az login --service-principal -u 87918873-4a8b-42a8-94df-89cd0e0cd733 -p 78888f13-bda2-48ae-9ab4-d00460935c7d --tenant 9fa97d99-5744-4766-89bc-f560b9a21102
