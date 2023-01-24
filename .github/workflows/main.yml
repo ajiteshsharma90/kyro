@@ -1,0 +1,55 @@
+name: CI/CD pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.8
+
+    - name: Install dependencies
+      run: |
+        python -m venv .venv
+        source .venv/bin/activate
+        python -m pip install fastapi
+        python -m pip install fastapi uvicorn
+        python -m pip install uvicorn
+        python -m pip install python-dotenv
+        python -m pip install aiohttp
+        python -m pip install azure-cosmos
+
+    - name: Build and test application
+      run: |
+        pytest
+
+    - name: Build Docker image
+      run: |
+        docker build -t myimage .
+
+    - name: Login to Azure
+      run: az login --service-principal -u 87918873-4a8b-42a8-94df-89cd0e0cd733 -p 78888f13-bda2-48ae-9ab4-d00460935c7d --tenant 9fa97d99-5744-4766-89bc-f560b9a21102
+
+    - name: Push image to ACR
+      run: |
+        az acr build --registry kryoreg --image myimage .
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Deploy to ACI
+      run: |
+        az container create --name my-container --image kryoreg.azurecr.io/myimage --registry-login-server kryoreg.azurecr.io --registry-username kryoreg --registry-password 5mKe1gDxKikU2OWRESqk7/Fs7ErqgiflWQXSJyvxMK+ACRBAz8jO --environment-variables COSMOSDB_ENDPOINT=https://kyro-cosmos-db.documents.azure.com:443/ COSMOSDB_KEY=7PMWdtNEo9W9bJ3eoXqGRpQFnMrp6SQEscSzPNf714dUXKoyoj59aZZpEah1xQKiwb6FgZBFAwm3ACDbljG27w==
+
