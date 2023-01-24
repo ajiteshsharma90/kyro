@@ -36,20 +36,25 @@ jobs:
       run: |
         docker build -t my-image -f cosmos-fast/Dockerfile .
 
-
-    - name: Login to Azure
-      run: az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET --tenant $AZURE_TENANT_ID
-   
-    - name: Push image to ACR
-      run: |
-        az acr build --registry kryoreg --image myimage .
-
   deploy:
-    needs: build
     runs-on: ubuntu-latest
-
+    needs: build
+    
     steps:
-    - name: Deploy to ACI
-      run: |
-        az container create --name my-container --image kryoreg.azurecr.io/myimage --registry-login-server kryoreg.azurecr.io --registry-username kryoreg --registry-password 5mKe1gDxKikU2OWRESqk7/Fs7ErqgiflWQXSJyvxMK+ACRBAz8jO --environment-variables COSMOSDB_ENDPOINT=https://kyro-cosmos-db.documents.azure.com:443/ COSMOSDB_KEY=7PMWdtNEo9W9bJ3eoXqGRpQFnMrp6SQEscSzPNf714dUXKoyoj59aZZpEah1xQKiwb6FgZBFAwm3ACDbljG27w==
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.KYROAPP_AZURE_CREDENTIALS }}
+        
+      - name: Push image to ACR
+        run: |
+         az acr build --registry kryoreg --image myimage .
 
+
+      - name: Deploy to containerapp
+        uses: azure/CLI@v1
+        with:
+          inlineScript: |
+            az config set extension.use_dynamic_install=yes_without_prompt
+            az containerapp registry set -n kyro-app -g kyro-RGP --server kryoreg.azurecr.io --username  ${{ secrets.KYROAPP_REGISTRY_USERNAME }} --password ${{ secrets.KYROAPP_REGISTRY_PASSWORD }}
+            az containerapp update -n kyro-app -g kyro-RGP --image kryoreg.azurecr.io/kyro-app:${{ github.sha }}
