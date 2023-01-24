@@ -15,7 +15,7 @@ jobs:
 
     - name: Build Docker image
       run: |
-        docker build -t myimage:latest -f kyro/cosmos-fast/
+        docker build -t myimage . -f /cosmos-fast/
 
     
     
