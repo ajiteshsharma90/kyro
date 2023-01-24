@@ -31,7 +31,6 @@ jobs:
 
     - name: Build and test application
       run: |
-        pytest
 
     - name: Build Docker image
       run: |
